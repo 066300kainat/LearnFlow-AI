@@ -85,40 +85,42 @@ export default function TaskDetailsPage({
   const [quizGenerating, setQuizGenerating] = useState(false);
 
   // =========================
-  // LOAD TASK
-  // =========================
+// LOAD TASK
+// =========================
 
-  useEffect(() => {
-    async function loadTask() {
-      try {
-     const { id } = params;
-const numericId = Number(id);
-        if (!Number.isFinite(numericId)) {
-          throw new Error("Invalid task ID");
-        }
+useEffect(() => {
+  async function loadTask() {
+    try {
+      const { id } = await params;
+      const numericId = Number(id);
 
-        setTaskId(numericId);
-
-        const response = await fetch(
-          `${API_URL}/tasks/${numericId}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch task");
-        }
-
-        const data: Task = await response.json();
-        setTask(data);
-      } catch (err) {
-        console.error("Task details error:", err);
-        setError("Unable to load task details.");
-      } finally {
-        setLoading(false);
+      if (!Number.isFinite(numericId)) {
+        throw new Error("Invalid task ID");
       }
-    }
 
-    loadTask();
-  }, [params.id]);
+      setTaskId(numericId);
+
+      const response = await fetch(
+        `${API_URL}/tasks/${numericId}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch task");
+      }
+
+      const data: Task = await response.json();
+      setTask(data);
+
+    } catch (err) {
+      console.error("Task details error:", err);
+      setError("Unable to load task details.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadTask();
+}, [params]);
   // =========================
   // LOAD NOTES
   // =========================
